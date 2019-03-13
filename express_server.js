@@ -5,7 +5,7 @@ var PORT = 8080; // default port 8080
 app.set("view engine", "ejs");
 
 function generateRandomString() {
-  return Math.random().toString(36).substring(2, 15);
+  return Math.random().toString(36).substring(2, 8);
 };
 
 var urlDatabase = {
@@ -19,21 +19,22 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.get("/", (req, res) => {
   res.send("Hello!");
 });
-
+//listening to app portal
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
-
+//display object
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
-
+//display the message on the HTML page
 app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
 
 app.get("/urls", (req, res) => {
   let templateVars = { urls: urlDatabase };
+  console.log(req)
   res.render("urls_index", templateVars);
 });
 
@@ -66,9 +67,9 @@ app.post("/urls/:shortURL/delete", (req, res) => {
   delete urlDatabase[shortURL];
   res.redirect("/urls/");
 });
-//retrieving longURL from the form
-//generate new shortURL
-//save to urlDatabase
 
-//remove a URL resource
-//redirect client back to 
+app.post("/urls/:shortURL/update", (req, res) => {
+  
+
+});
+ 
