@@ -11,13 +11,18 @@
 
 <body style="font-size:20px; padding:50px;">
   <%  include ./partials/_header %>
+ 
+  <a href="/urls/new">Create New TinyURL</a>
   <br />
   <ul>
   <% for (var item in urls) { %>
-    
-    <li><%= item %> - <a href = '<%= urls[item] %>'><%=urls[item]%></a> </li>
-    <div class="form-group mb-2"></div>
-    <form method="POST" action="/urls/<%= item %>/delete"><button type="submit" value="Delete">Delete</button></form> 
+    <div class="form-group mb-2">
+    <li><%= item %> - <a href = '<%= urls[item] %>'><%=urls[item]%></a>       
+      <form method="POST" action="/urls/<%= item %>/update">
+        <button type="submit" value="Edit">Edit</button> </form>
+        <form method="POST" action="/urls/<%= item %>/delete">  
+          <button type="submit" value="Delete">Delete</button></form> 
+        </li>
     </div>
 <% }; %>
 </ul>
