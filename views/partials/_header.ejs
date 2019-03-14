@@ -4,8 +4,22 @@
 <h1>Welcome to the TinyApp URL Shortener!</h1>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-  <!-- Bootstrap CSS -->
+    <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-  <title>TinyApp</title>
+  <% if (username) { %>
+    <h3>Logged in as: <%= username %>!</h3>
+    <form action="/logout" method="POST">
+      <button type="submit" class="btn btn-primary">Logout</button>
+    </form>
+
+  <% } else{ %>
+  <label for="username">Username:</label>
+    <form action="/login" method="POST">
+      <input type="text" name="username" placeholder="Enter username">
+        <button type="submit" class="btn btn-primary">Login</button>
+      </form>
+
+  <% } %>
+    <title>TinyApp</title>
+    
 </head>
