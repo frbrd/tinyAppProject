@@ -84,8 +84,6 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 
 app.post("/urls/:shortURL/update", (req, res) => {
   const shortURL = req.params.shortURL;
-  const longURL = 
-  console.log('update');
   res.redirect("/urls/");
 });
 
@@ -102,7 +100,15 @@ app.post("/logout", (req, res) => {
  
 app.post("/register", (req, res) => {
   const userID = generateRandomString();
-  usersDb.userRandomID.id = userID;
+  const username = req.body.username;
+  const mail = req.body.email;
+  const password = req.body.password;
+ 
+  const newUser = { id: userID, email: mail, password: password};
+  usersDb[userID] = newUser;
+  console.log('UserDb: ', usersDb);
+  //set cookie's userID to randomID instead of username
   res.cookie("userId", userID);
+  console.log(newUser);
   res.redirect("/urls");
 });
