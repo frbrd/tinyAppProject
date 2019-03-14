@@ -71,13 +71,19 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 
 app.post("/urls/:shortURL/update", (req, res) => {
   const shortURL = req.params.shortURL;
+  const longURL = 
   console.log('update');
   res.redirect("/urls/");
 });
 
 
-app.post("/urls/login", (req, res) => {
+app.post("/login", (req, res) => {
   res.cookie('user', req.body.username);;
   res.redirect("/urls");
 });
+
+app.post("/logout", (req, res) => {
+  res.clearCookie("user");
+  res.redirect("/urls");
+})
  
