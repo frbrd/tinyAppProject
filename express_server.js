@@ -103,7 +103,6 @@ app.post("/logout", (req, res) => {
 app.post("/register", (req, res) => {
   const userID = generateRandomString();
   usersDb.userRandomID.id = userID;
-  res.cookie("userId", userID)
+  res.cookie("userId", userID);
   res.redirect("/urls");
-
 });
