@@ -13,6 +13,16 @@ function generateRandomString() {
   return Math.random().toString(36).substring(2, 8);
 };
 
+const verifyIfEmailExists = function (email) {
+   for (var user in usersDb) { 
+    console.log(user);
+    if (email === usersDb[user].email){
+      return true;
+  }
+}
+
+};
+
 var urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
@@ -100,15 +110,25 @@ app.post("/logout", (req, res) => {
  
 app.post("/register", (req, res) => {
   const userID = generateRandomString();
-  const username = req.body.username;
-  const mail = req.body.email;
+  const email = req.body.email;
   const password = req.body.password;
- 
-  const newUser = { id: userID, email: mail, password: password};
-  usersDb[userID] = newUser;
-  console.log('UserDb: ', usersDb);
-  //set cookie's userID to randomID instead of username
-  res.cookie("userId", userID);
-  console.log(newUser);
-  res.redirect("/urls");
-});
+    if (email === "" || password === "" ) {
+      res.status(400).send('Give us your info!');
+    }
+    // res.status(400).json(json_response);
+    else if (verifyIfEmailExists(email)) {
+      res.status(400).send("This email is already registered.");
+    } else { 
+      console.log("Email doesn't exist");
+      const newUser = { id: userID, email: email, password: password};
+      usersDb[userID] = newUser;
+      console.log('UserDb: ', usersDb);
+
+        //set cookie's userID to randomID instead of username
+      res.cookie("userId", userID);
+      res.redirect("/urls");
+
+      }
+    }); 
+
+
