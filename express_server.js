@@ -23,6 +23,16 @@ const verifyIfEmailExists = function (email) {
 
 };
 
+function getUserFromCookie (req) {
+  var username = null;
+  var email = null;
+  if (usersDb[req.cookies['userId']]) {
+    email = usersDb[req.cookies['userId']].email;
+    username = usersDb[req.cookies['userId'].username];
+  }
+  return {username, email};
+}
+
 var urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
@@ -31,11 +41,13 @@ var urlDatabase = {
 var usersDb =  {
 "userRandomID": {
   id: "userRandomID", 
+  username: "placeholder1",
   email: "user@example.com", 
   password: "purple-monkey-dinosaur"
 },
 "user2RandomID": {
   id: "user2RandomID", 
+  username: "placeholder2",
   email: "user2@example.com", 
   password: "dishwasher-funk"
 }
@@ -58,17 +70,19 @@ app.get("/hello", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  let templateVars = { urls: urlDatabase, username: req.cookies["user"]};
+  console.log(req.cookies['userId']);
+
+  let templateVars = { urls: urlDatabase, ...getUserFromCookie(req)};
   res.render("urls_index", templateVars);
 });
 
 app.get("/urls/new", (req, res) => {
-  let templateVars = {username: req.cookies["user"]}
+  let templateVars = {...getUserFromCookie(req)}
   res.render("urls_new", templateVars);
 });
 
 app.get("/urls/:shortURL", (req, res) => {
-  let templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL], username: req.cookies["user"]};
+  let templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL], ...getUserFromCookie(req)};
   res.render("urls_show", templateVars);
 });
 
@@ -99,6 +113,42 @@ app.post("/urls/:shortURL/update", (req, res) => {
 
 
 app.post("/login", (req, res) => {
+  if (email === "" || password === "" ) {
+    res.status(400).send('Give us your info!');
+  }
+  // res.status(400).json(json_response);
+  else if (verifyIfEmailExists(email)) {
+    res.status(400).send("This email is already registered.");
+  } else { 
+    console.log("Email doesn't exist");
+    const newUser = { id: userID, email: email, password: password};
+    usersDb[userID] = newUser;
+    console.log('UserDb: ', usersDb);
+
+      //set cookie's userID to randomID instead of username
+    res.cookie("userId", userID);
+    res.redirect("/urls");
+
+  }
+});
+
+app.get("/login", (req, res) => {
+  if (email === "" || password === "" ) {
+    res.status(400).send('Give us your info!');
+  }
+  // res.status(400).json(json_response);
+  else if (verifyIfEmailExists(email)) {
+    res.status(400).send("This email is already registered.");
+  } else { 
+      console.log("Email doesn't exist");
+      const newUser = { id: userID, email: email, password: password};
+      usersDb[userID] = newUser;
+      console.log('UserDb: ', usersDb);
+
+      //set cookie's userID to randomID instead of username
+      res.cookie("userId", userID);
+    }
+
   res.cookie('user', req.body.username);;
   res.redirect("/urls");
 });
@@ -110,25 +160,23 @@ app.post("/logout", (req, res) => {
  
 app.post("/register", (req, res) => {
   const userID = generateRandomString();
+  const username = req.body.username;
   const email = req.body.email;
   const password = req.body.password;
     if (email === "" || password === "" ) {
       res.status(400).send('Give us your info!');
     }
-    // res.status(400).json(json_response);
     else if (verifyIfEmailExists(email)) {
       res.status(400).send("This email is already registered.");
     } else { 
-      console.log("Email doesn't exist");
-      const newUser = { id: userID, email: email, password: password};
-      usersDb[userID] = newUser;
-      console.log('UserDb: ', usersDb);
+        console.log("Email doesn't exist");
+        const newUser = { id: userID, email: email, password: password};
+        usersDb[userID] = newUser;
+        console.log('UserDb: ', usersDb);
 
         //set cookie's userID to randomID instead of username
-      res.cookie("userId", userID);
-      res.redirect("/urls");
+        res.cookie("userId", userID);
+        res.redirect("/urls");
 
       }
-    }); 
-
-
+    });
