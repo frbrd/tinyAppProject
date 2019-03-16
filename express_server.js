@@ -91,9 +91,16 @@ app.get("/urls/:shortURL", (req, res) => {
 
 app.post("/urls", (req, res) => {
   const longURL = req.body.longURL;
+  const userId = getUserFromCookie(req)
   const shortURL = generateRandomString();
-  urlDatabase[shortURL] = longURL;
-  //res.send(urlDatabase);      
+  urlDatabase[shortURL] = {longURL: longURL, userId: userId};
+  //res.send(urlDatabase);    
+  if (userId) {
+    urlDatabase[shortURL] = {longURL: longURL, userId: userId};
+    res.redirect("/urls/");
+  }  else {
+    res.redirect("/login");
+  }
   res.redirect(`/urls/${shortURL}`); 
 });
 
