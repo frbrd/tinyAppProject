@@ -1,22 +1,26 @@
 
 
 <body style="font-size:20px; padding:50px;">
+    <div class="form-group col-sm-4">
   <%  include ./partials/_header %>
- 
+ <br />
   <a href="/urls/new">Create New TinyURL</a>
   <br />
-  <ul>
+  <ul style="list-style:none;">
   <% for (var item in urls) { %>
 
     <li><%= item %> - <a href = '<%= urls[item] %>'><%=urls[item]%></a>       
       <div class="form-group mb-2">
-        <form method="GET" action="/urls/<%= item %>">
+        <form class="form-inline" method="GET" action="/urls/<%= item %>">
           <button type="submit" value="Edit" class="btn btn-primary" name="Edit">Edit</button> 
-        </form><form method="POST" action="/urls/<%= item %>/delete"> 
-          <button type="submit" value="Delete" class="btn btn-primary">Delete</button></form>
+        </form>
+        <form class="form-inline" method="POST" action="/urls/<%= item %>/delete"> 
+          <button type="submit" value="Delete" class="btn btn-primary col-auto my-1">Delete</button>
+        </form>
       </div>
     </li>
 <% }; %>
 </ul>
+</div>
 </body>
 </html>
