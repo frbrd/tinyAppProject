@@ -14,11 +14,10 @@ function generateRandomString() {
 };
 
 const verifyIfEmailExists = function (email) {
-   for (var user in usersDb) { 
-    console.log(user);
+  for (var user in usersDb) { 
     if (email === usersDb[user].email){
-      return true;
-  }
+      return usersDb[user];
+    }
 }
 
 };
@@ -26,11 +25,15 @@ const verifyIfEmailExists = function (email) {
 function getUserFromCookie (req) {
   var username = null;
   var email = null;
+  var userRecord;
+  console.log('db: ', usersDb)
   if (usersDb[req.cookies['userId']]) {
-    email = usersDb[req.cookies['userId']].email;
-    username = usersDb[req.cookies['userId'].username];
+    userRecord = usersDb[req.cookies['userId']]
+    email = userRecord.email;
   }
-  return {username, email};
+  console.log('getting user: ', userRecord)
+
+  return userRecord;
 }
 
 var urlDatabase = {
@@ -39,18 +42,18 @@ var urlDatabase = {
 };  
 
 var usersDb =  {
-"userRandomID": {
-  id: "userRandomID", 
-  username: "placeholder1",
-  email: "user@example.com", 
-  password: "purple-monkey-dinosaur"
-},
-"user2RandomID": {
-  id: "user2RandomID", 
-  username: "placeholder2",
-  email: "user2@example.com", 
-  password: "dishwasher-funk"
-}
+  "userRandomID": {
+    id: "userRandomID", 
+    username: "placeholder1",
+    email: "user@example.com", 
+    password: "purple-monkey-dinosaur"
+  },
+  "user2RandomID": {
+    id: "user2RandomID", 
+    username: "placeholder2",
+    email: "user2@example.com", 
+    password: "dishwasher-funk"
+  }
 };
 
 app.get("/", (req, res) => {
@@ -70,19 +73,19 @@ app.get("/hello", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  console.log(req.cookies['userId']);
-
-  let templateVars = { urls: urlDatabase, ...getUserFromCookie(req)};
+  console.log('jim: ',req.cookies['userId']);
+  let templateVars = { urls: urlDatabase, user: getUserFromCookie(req)};
+  console.log('asdasd: ',templateVars)
   res.render("urls_index", templateVars);
 });
 
 app.get("/urls/new", (req, res) => {
-  let templateVars = {...getUserFromCookie(req)}
+  let templateVars = {user: getUserFromCookie(req)}
   res.render("urls_new", templateVars);
 });
 
 app.get("/urls/:shortURL", (req, res) => {
-  let templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL], ...getUserFromCookie(req)};
+  let templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL], user: getUserFromCookie(req)};
   res.render("urls_show", templateVars);
 });
 
@@ -107,57 +110,45 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 });
 
 app.post("/urls/:shortURL/update", (req, res) => {
+  const longURL = req.body.longURL;
   const shortURL = req.params.shortURL;
+  urlDatabase[shortURL] = longURL;
   res.redirect("/urls/");
 });
 
-
-app.post("/login", (req, res) => {
-  if (email === "" || password === "" ) {
-    res.status(400).send('Give us your info!');
-  }
-  // res.status(400).json(json_response);
-  else if (verifyIfEmailExists(email)) {
-    res.status(400).send("This email is already registered.");
-  } else { 
-    console.log("Email doesn't exist");
-    const newUser = { id: userID, email: email, password: password};
-    usersDb[userID] = newUser;
-    console.log('UserDb: ', usersDb);
-
-      //set cookie's userID to randomID instead of username
-    res.cookie("userId", userID);
-    res.redirect("/urls");
-
-  }
+app.get("/login", (req, res) => {
+  let templateVars = {user: getUserFromCookie(req)}
+  res.render("login", templateVars);
 });
 
-app.get("/login", (req, res) => {
+app.post("/login", (req, res) => {
+  const email = req.body.email;
+  const password = req.body.password;
+  const oldUser = verifyIfEmailExists(email)
   if (email === "" || password === "" ) {
     res.status(400).send('Give us your info!');
   }
   // res.status(400).json(json_response);
-  else if (verifyIfEmailExists(email)) {
-    res.status(400).send("This email is already registered.");
-  } else { 
-      console.log("Email doesn't exist");
-      const newUser = { id: userID, email: email, password: password};
-      usersDb[userID] = newUser;
-      console.log('UserDb: ', usersDb);
-
+  else if (oldUser) {
       //set cookie's userID to randomID instead of username
-      res.cookie("userId", userID);
+      res.cookie("userId", oldUser.id);
+      res.redirect("/urls")
     }
 
-  res.cookie('user', req.body.username);;
-  res.redirect("/urls");
+  // res.cookie('user', req.body.username);;
+  // res.redirect("/urls");
 });
 
 app.post("/logout", (req, res) => {
-  res.clearCookie("user");
+  res.clearCookie("userId");
   res.redirect("/urls");
 });
  
+app.get("/register", (req, res) => {
+  let templateVars = {user: getUserFromCookie(req)}
+  res.render("register", templateVars);
+});
+
 app.post("/register", (req, res) => {
   const userID = generateRandomString();
   const username = req.body.username;
@@ -176,6 +167,7 @@ app.post("/register", (req, res) => {
 
         //set cookie's userID to randomID instead of username
         res.cookie("userId", userID);
+        console.log('Jimmy: ',newUser.id);
         res.redirect("/urls");
 
       }
