@@ -1,0 +1,27 @@
+
+ <head>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+ </head>
+ <body style="font-size:20px; padding:50px;">
+    <div class="form-group col-sm-4">
+    <%  include ./partials/_header %>
+<h2>Login</h2>
+      
+      <form action="/login" method="POST">     
+          <label class="col-lg-2 col-form-label col-form-label-lg" for="email">Email:</label>  
+              <input type="text" class="form-control" name="email" placeholder="Enter email">
+          <label class="col-lg-2 col-form-label col-form-label-lg" for="password">Password:</label>
+              <input type="text" class="form-control" name="password" placeholder="Enter password">
+      
+
+      <div class="form-group row">
+          <div class="col-sm-10">
+            <button type="submit" class="btn btn-primary my-1">Login</button>
+          </div>
+      </div>
+    </form>
+      
+  </div>
+</body>
+    
