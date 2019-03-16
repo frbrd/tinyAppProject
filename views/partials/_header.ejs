@@ -1,36 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<h1>Welcome to the TinyApp URL Shortener!</h1>
+<h1>TinyApp</h1>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-  <% if (username) { %>
-    <h3>Logged in as: <%= email %>!</h3>
+  <% if (user) { %>
+    <h3>Logged in as: <%= user.email %>!</h3>
     <form action="/logout" method="POST">
       <button type="submit" class="btn btn-primary">Logout</button>
     </form>
 
   <% } else{ %>
-    <a href="">Register</a>
-  <label for="username">Username:</label>
-    <form action="/login" method="POST">
-      <input type="text" name="username" placeholder="Enter username">
-        <button type="submit" class="btn btn-primary">Login</button>
-      </form>
+   
+      <a href="/login">Login</button></a> | <a href="/register">Register</a>
 
     
-      <form action="/register" method="POST">
-        <label for="username">Username:</label>
-        <input type="text" name="username" placeholder="Enter username">
-        <label for="email">Email:</label>
-        <form action="/login" method="POST">
-          <input type="text" name="email" placeholder="Enter email">
-        <label for="password">Password:</label>
-        <input type="text" name="password" placeholder="Enter password">
-          <button type="submit" class="btn btn-primary">Register</button>
-        </form>
+
 
   <% } %>
     <title>TinyApp</title>
