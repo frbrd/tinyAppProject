@@ -11,7 +11,7 @@
   <ul style="list-style:none;">
   <% for (var item in urls) { %>
 
-    <li><%= item %> - <a href = '<%= urls[item] %>'><%=urls[item]%></a>       
+    <li><%= item %> - <a href = '<%= urls[item] %>'><%=urls[item].longURL%></a>       
       <div class="form-group mb-2">
         <form class="form-inline" method="GET" action="/urls/<%= item %>">
           <button type="submit" value="Edit" class="btn btn-primary" name="Edit">Edit</button> 
