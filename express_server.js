@@ -127,11 +127,6 @@ app.post("/urls", (req, res) => {
       res.status(400).send("You need to log in!");
   }
 });
-//NOT SURE WHAT THIS (BELOW) IS FOR... 
-// app.get("/u/:shortURL", (req, res) => {
-//   const longURL = urlDatabase[req.params.shortURL].longURL;
-//   res.redirect(longURL);
-// });
 
 app.post("/urls/:shortURL/delete", (req, res) => {
   const user = usersDb[req.session.userId];

@@ -1,16 +1,12 @@
-
-
-
 <body style="font-size:20px; padding:50px;">
-    <div class="form-group col-sm-4">
+  <div class="form-group col-sm-4">
   <%  include ./partials/_header %>
- <br />
+  <br />
 
   <a href="/urls/new">Create New TinyURL</a>
   <br />
   <ul style="list-style:none;">
   <% for (var item in urls) { %>
-
     <li><%= item %> - <a href = '<%= urls[item] %>'><%=urls[item].longURL%></a>       
       <div class="form-group mb-2">
         <form class="form-inline" method="GET" action="/urls/<%= item %>">
@@ -21,8 +17,8 @@
         </form>
       </div>
     </li>
-<% } %>
-</ul>
-</div>
+  <% } %>
+  </ul>
+  </div>
 </body>
 </html>
