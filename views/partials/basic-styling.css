@@ -3,3 +3,13 @@
   justify-content: center;
   align-items: center;
 }
+
+head h1 a {
+  color: black;
+  text-decoration: none;
+}
+
+head h1 a:hover {
+  color: black;
+  text-decoration: none;
+}
